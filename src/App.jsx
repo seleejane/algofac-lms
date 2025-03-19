@@ -6,6 +6,7 @@ import Login from "../src/views/auth/Login";
 import Logout from "./views/auth/Logout";
 import ForgotPassword from "./views/auth/ForgotPassword";
 import Index from './views/base/Index'
+import CourseDetail from "./views/base/CourseDetail";
 
 function App() {
  
@@ -18,6 +19,7 @@ function App() {
         <Route path="/logout/" element={<Logout />} />
         <Route path="/forgot-password/" element={<ForgotPassword />} />
         <Route path="/" element={<Index />} />
+        <Route path="/course-detail/:slug/" element={<CourseDetail />} />
       </Routes>
     </MainWrapper>
   </BrowserRouter>

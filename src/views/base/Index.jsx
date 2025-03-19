@@ -1,41 +1,31 @@
-import React from 'react'
-import {useState, useEffect} from 'react'
+import React, {useState, useEffect} from 'react'
 import BaseHeader from '../partials/BaseHeader'
 import BaseFooter from '../partials/BaseFooter'
 import { Link } from 'react-router-dom'
-import UseAxios from '../../utils/UseAxios'
-import axios from '../../utils/axios'
-import apiInstance from '../../utils/axios'
-import useAxios from '../../utils/UseAxios'
-import sciencea  from '../../assets/images/sciencea.png'
+import axios from '../../utils/UseAxios'
 import mathematics5  from '../../assets/images/mathematics5.png'
 import setswana from '../../assets/images/setswana.png'
 import avatar from '../../assets/images/avatar/avatar.jpg'
 import students from '../../assets/images/students.jpg'
+import instructor from '../../assets/images/become_an_instructor.png'
+import Rater from 'react-rater'
+import "react-rater/lib/react-rater.css"
 
 function Index() {
-    const [courses, setCourses] = useState([])
-    const [isLoading, setIsLoading] = useState(false)
-
-    const fetchCourse = async () => {
-        setIsLoading(true); 
-        try {
-            await axios.get('courses/course-list/').then((res) => {
-                console.log("Good");
-                console.log(res.data);
-                setCourses(res.data);
-                setIsLoading(false);
-            })
-
-        } catch (error) {
-            console.log("BadError");
-            console.log(error);
-        }
-    }
     
+    const [courses, setCourses] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
 
-    useEffect(() => {
-        fetchCourse;
+    useEffect (()=> {
+        setIsLoading(true); 
+        async function fetchData() {
+            const request = await axios.get('course/course-list/');
+            console.log(request.data);
+            setIsLoading(false);
+            setCourses(request.data)
+            return request;
+        }
+        fetchData();    
     },[])
         
     /* console.log(courses); */
@@ -53,21 +43,14 @@ function Index() {
                         <div className="col-lg-6 mb-6 mb-lg-0">
                             <div>
                                 {/* heading */}
-                                <h5 className="text-dark mb-4">
-                                    <i className="fe fe-check icon-xxs icon-shape bg-light-success text-success rounded-circle me-2" />
-                                    Learn at your Own Pace, and Pass easily with AI behind your Back
-                                </h5>
-                                <h5 className="text-dark mb-4">
-                                    <i className="fe fe-check icon-xxs icon-shape bg-light-success text-success rounded-circle me-2" />
-                                    Time and Location is no longer a Barrier
-                                </h5>
+                                
                                 {/* heading */}
-                                <h1 className="display-4 fw-bold mb-3">
-                                    Botswana's Secondary Schools Education Platform
+                                <h1 className="display-6 fw-bold mb-3">
+                                    Botswana's Secondary Schools Education Platform <br></br> <b>[<font color='red'>Powered by Generative AI</font>]</b> 
                                 </h1>
                                 {/* para */}
                                 <p className="pe-lg-10 mb-5">
-                                    ALGO-LEARN brings an education platform with over 200 educational videos to cover  
+                                    ITHUTE brings an education platform with over 200 educational videos to cover  
                                     Form One to Form 5 syllabus. It also brings about Artificial Intelligence model for 
                                     answering questions.
                                 </p>
@@ -177,14 +160,17 @@ function Index() {
                         <div className="col-md-12">
                             <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
 
-                                {/* For Loop */}                             
+                                {/* For Loop */}
+                                {courses?.map((c, index) => (
+                                                              
+                                // eslint-disable-next-line react/jsx-key
                                 <div className="col">
                                     
                                     {/* Card */}
                                     <div className="card card-hover">
-                                        <Link to={`/course-detail/slug/`}>
+                                        <Link to={`/course-detail/${c.slug}`}>
                                             <img
-                                                src={sciencea}
+                                                src={c.image}
                                                 alt="course"
                                                 className="card-img-top"
                                                 style={{ width: "100%", height: "200px", objectFit: "cover" }}
@@ -200,26 +186,22 @@ function Index() {
                                                 </a>
                                             </div>
                                             <h4 className="mb-2 text-truncate-line-2 ">
-                                                <Link to={`/course-detail/slug/`} className="text-inherit text-decoration-none text-dark fs-5">
-                                                    Chemistry - Titration
+                                                <Link to={`/course-detail/:slug/`} className="text-inherit text-decoration-none text-dark fs-5">
+                                                    {c.title}
                                                     
                                                 </Link>
-                                                <p className='mt-2'>FORM 4</p>
+                                                <p className='mt-2'>{c.level}</p>
                                             </h4>
-                                            <small>By: Mr Motse Ntwaagae</small> <br />
-                                            <small>150 Students</small> <br />
+                                            <small>By: {c.teacher.full_name}</small> <br />
+                                            <small>{c.students?.length} 
+                                                Student {c.students?.length > 1 && "s"}
+                                            </small> <br />
                                             <div className="lh-1 mt-3 d-flex">
-                                                <span className="align-text-top">
-                                                    <span className="fs-6">
-                                                        <i className='fas fa-star text-warning'></i>
-                                                        <i className='fas fa-star text-warning'></i>
-                                                        <i className='fas fa-star text-warning'></i>
-                                                        <i className='fas fa-star text-warning'></i>
-                                                        <i className='fas fa-star-half text-warning'></i>
-                                                    </span>
+                                                
+                                                <span className="text-warning">
+                                                    <Rater total={5} rating={c.average_rating} />
                                                 </span>
-                                                <span className="text-warning">4.5</span>
-                                                <span className="fs-6 ms-2">(120)</span>
+                                                <span className="fs-6 ms-2">({c.reviews?.length}) Review {c.reviews?.length > 1 && "s"}</span>
                                             </div>
                                         </div>
                                         {/* Card Footer */}
@@ -240,186 +222,11 @@ function Index() {
                                         </div>
                                     </div>
                                 </div>
+                            ))}
+                              
+
                                 
-                                <div className="col">
-                                    {/* Card */}
-                                    <div className="card card-hover">
-                                        <Link to={`/course-detail/slug/`}>
-                                            <img
-                                                src={mathematics5}
-                                                alt="course"
-                                                className="card-img-top"
-                                                style={{ width: "100%", height: "200px", objectFit: "cover" }}
-                                            />
-                                        </Link>
-                                        {/* Card Body */}
-                                        <div className="card-body">
-                                            <div className="d-flex justify-content-between align-items-center mb-3">
-                                                <span className="badge bg-info">Cambridge</span>
-                                                <a href="#" className="fs-5">
-                                                    <i className="fas fa-heart text-danger align-middle" />
-                                                </a>
-                                            </div>
-                                            <h4 className="mb-2 text-truncate-line-2 ">
-                                                <Link to={`/course-detail/slug/`} className="text-inherit text-decoration-none text-dark fs-5">
-                                                    Calculus & Trigonometry
-                                                </Link>
-                                                
-                                                <p className='mt-2'>Form 5</p>
-                                            </h4>
-                                            <small>By: S. Gaelebale</small> <br />
-                                            <small>700 Students</small> <br />
-                                            <div className="lh-1 mt-3 d-flex">
-                                                <span className="align-text-top">
-                                                    <span className="fs-6">
-                                                        <i className='fas fa-star text-warning'></i>
-                                                        <i className='fas fa-star text-warning'></i>
-                                                        <i className='fas fa-star text-warning'></i>
-                                                        <i className='fas fa-star text-warning'></i>
-                                                        <i className='fas fa-star-half text-warning'></i>
-                                                    </span>
-                                                </span>
-                                                <span className="text-warning">4.5</span>
-                                                <span className="fs-6 ms-2">(300)</span>
-                                            </div>
-                                        </div>
-                                        {/* Card Footer */}
-                                        <div className="card-footer">
-                                            <div className="row align-items-center g-0">
-                                                <div className="col">
-                                                    <h5 className="mb-0">P150.00</h5>
-                                                </div>
-                                                <div className="col-auto">
-                                                    <a href="#" className="text-inherit text-decoration-none btn btn-primary">
-                                                        <i className="fas fa-shopping-cart text-primary align-middle me-2 text-white" />
-                                                        Enroll Now
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="col">
-                                    {/* Card */}
-                                    <div className="card card-hover">
-                                        <Link to={`/course-detail/slug/`}>
-                                            <img
-                                                src={setswana}
-                                                alt="course"
-                                                className="card-img-top"
-                                                style={{ width: "100%", height: "200px", objectFit: "cover" }}
-                                            />
-                                        </Link>
-                                        
-                                        {/* Card Body */}
-                                        <div className="card-body">
-                                            <div className="d-flex justify-content-between align-items-center mb-3">
-                                                <span className="badge bg-info">cambridge</span>
-                                                <a href="#" className="fs-5">
-                                                    <i className="fas fa-heart text-danger align-middle" />
-                                                </a>
-                                            </div>
-                                            <h4 className="mb-2 text-truncate-line-2 ">
-                                                <Link to={`/course-detail/slug/`} className="text-inherit text-decoration-none text-dark fs-5">
-                                                    Setswana - Maboko
-                                                </Link>
-                                                <p className='mt-2'>FORM 4</p>
-                                            </h4>
-                                            <small>By: Eunice G. Moitse</small> <br />
-                                            <small>1000 Students</small> <br />
-                                            <div className="lh-1 mt-3 d-flex">
-                                                <span className="align-text-top">
-                                                    <span className="fs-6">
-                                                        <i className='fas fa-star text-warning'></i>
-                                                        <i className='fas fa-star text-warning'></i>
-                                                        <i className='fas fa-star text-warning'></i>
-                                                        <i className='fas fa-star text-warning'></i>
-                                                        <i className='fas fa-star-half text-warning'></i>
-                                                    </span>
-                                                </span>
-                                                <span className="text-warning">5</span>
-                                                <span className="fs-6 ms-2">(800)</span>
-                                            </div>
-                                        </div>
-
-                                        {/* Card Footer */}
-                                        <div className="card-footer">
-                                            <div className="row align-items-center g-0">
-                                                <div className="col">
-                                                    <h5 className="mb-0">P200.00</h5>
-                                                </div>
-                                                <div className="col-auto">
-                                                    <a href="#" className="text-inherit text-decoration-none btn btn-primary">
-                                                        <i className="fas fa-shopping-cart text-primary align-middle me-2 text-white" />
-                                                        Enroll Now
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="col">
-                                    {/* Card */}
-                                    <div className="card card-hover">
-                                        <Link to={`/course-detail/slug/`}>
-                                            <img
-                                                src={setswana}
-                                                alt="course"
-                                                className="card-img-top"
-                                                style={{ width: "100%", height: "200px", objectFit: "cover" }}
-                                            />
-                                        </Link>
-                                        
-                                        {/* Card Body */}
-                                        <div className="card-body">
-                                            <div className="d-flex justify-content-between align-items-center mb-3">
-                                                <span className="badge bg-info">cambridge</span>
-                                                <a href="#" className="fs-5">
-                                                    <i className="fas fa-heart text-danger align-middle" />
-                                                </a>
-                                            </div>
-                                            <h4 className="mb-2 text-truncate-line-2 ">
-                                                <Link to={`/course-detail/slug/`} className="text-inherit text-decoration-none text-dark fs-5">
-                                                    Setswana - Compositions
-                                                </Link>
-                                                <p className='mt-2'>FORM 4</p>
-                                            </h4>
-                                            <small>By: S. Gaelebale</small> <br />
-                                            <small>1000 Students</small> <br />
-                                            <div className="lh-1 mt-3 d-flex">
-                                                <span className="align-text-top">
-                                                    <span className="fs-6">
-                                                        <i className='fas fa-star text-warning'></i>
-                                                        <i className='fas fa-star text-warning'></i>
-                                                        <i className='fas fa-star text-warning'></i>
-                                                        <i className='fas fa-star text-warning'></i>
-                                                        <i className='fas fa-star-half text-warning'></i>
-                                                    </span>
-                                                </span>
-                                                <span className="text-warning">5</span>
-                                                <span className="fs-6 ms-2">(800)</span>
-                                            </div>
-                                        </div>
-
-                                        {/* Card Footer */}
-                                        <div className="card-footer">
-                                            <div className="row align-items-center g-0">
-                                                <div className="col">
-                                                    <h5 className="mb-0">P200.00</h5>
-                                                </div>
-                                                <div className="col-auto">
-                                                    <a href="#" className="text-inherit text-decoration-none btn btn-primary">
-                                                        <i className="fas fa-shopping-cart text-primary align-middle me-2 text-white" />
-                                                        Enroll Now
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
+                                
                                 <nav className="d-flex mt-5">
                                   <ul className="pagination">
                                     <li
@@ -472,33 +279,28 @@ function Index() {
                 {/* container */}
                 <div className="container">
                     {/* row */}
-                    <div className="row align-items-center bg-primary gx-0 rounded-3 mt-5">
+                    <div className="row align-items-center gx-0 rounded-3 mt-5 bg-info">
                         {/* col */}
                         <div className="col-lg-6 col-12 d-none d-lg-block">
                             <div className="d-flex justify-content-center pt-4">
                                 {/* img */}
                                 <div className="position-relative">
                                     <img
-                                        src="https://geeksui.codescandy.com/geeks/assets/images/png/cta-instructor-1.png"
+                                        src={instructor}
                                         alt="image"
                                         className="img-fluid mt-n8"
                                     />
-                                    <div className="ms-n8 position-absolute bottom-0 start-0 mb-6">
-                                        <img src="https://geeksui.codescandy.com/geeks/assets/images/svg/dollor.svg" alt="dollor" />
-                                    </div>
-                                    {/* img */}
-                                    <div className="me-n4 position-absolute top-0 end-0">
-                                        <img src="https://geeksui.codescandy.com/geeks/assets/images/svg/graph.svg" alt="graph" />
-                                    </div>
+                                    
+                                    
                                 </div>
                             </div>
                         </div>
                         <div className="col-lg-5 col-12">
-                            <div className="text-white p-5 p-lg-0">
+                            <div className="text-purple p-5 p-lg-0">
                                 {/* text */}
-                                <h2 className="h1 text-white">Become an course provider</h2>
+                                <h2 className="h1 text-white">Become a Course Provider and make Passive Income</h2>
                                 <p className="mb-0">
-                                    Register as a Course Provider and earn some money. You will also get an opportunity to turtor thousands of students.
+                                    Register as a Course Provider and earn some money every time your course get bought. You will also get an opportunity to turtor thousands of students around the country. Other teachers will also learn from you on how to deliver the course materials.
                                 </p>
                                 <a href="#" className="btn bg-white text-dark fw-bold mt-4">
                                     Start Teaching Today <i className='fas fa-arrow-right'></i>
@@ -535,10 +337,10 @@ function Index() {
                                         {/* heading */}
                                         <h2 className="h1">What our students say</h2>
                                         <p className="mb-0">
-                                            Hear from 
+                                            Hear from
                                             
-                                            <span className="text-dark">teachers -, students and industry leaders -</span>
-                                            in the learning space about how ALGOLEARN empowers them to provide
+                                            <span className="text-dark">teachers, students and industry leaders -</span>
+                                            in the learning space about how ITHUTE empowers them to provide
                                             quality online learning experiences.
                                         </p>
                                     </div>

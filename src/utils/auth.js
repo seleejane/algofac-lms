@@ -117,11 +117,12 @@ export const getRefreshToken = async () => {
 };
 
 // No changes needed here, but made sure that any error during decoding defaults to token expiration
-export const isAccessTokenExpired = (access_token) => {
+export const isAccessTokenExpired = (refresh_token) => {
     try {
-        const decodedToken = jwt_decode(access_token);
+        const decodedToken = jwt_decode(refresh_token);
         return decodedToken.exp < Date.now() / 1000;
     } catch (error) {
+        console.log(refresh_token);
         console.error("Error decoding token:", error);
         return true; // Consider token expired if decoding fails
     }

@@ -1,4 +1,6 @@
 import React from 'react'
+import appstore from '../../assets/images/appstore.png'
+import playstore from '../../assets/images/playstore.png'
 
 function BaseFooter() {
   return (
@@ -8,11 +10,10 @@ function BaseFooter() {
           <div className="col-lg-4 col-md-6 col-12 text-white">
             {/* about company */}
             <div className="mb-4">
-              <h1>Algo-Learn</h1>
+              <h1>ITHUTE</h1>
               <div className="mt-4">
                 <p>
-                  Algo-Learn is feature-rich components and beautifully Bootstrap UIKit
-                  for developers, built with bootstrap responsive framework.
+                  ITHUTE Your number one Platform for Secondary Learning in Botswana.
                 </p>
                 {/* social media */}
                 <div className="fs-4 mt-4">
@@ -119,7 +120,7 @@ function BaseFooter() {
                 </li>
                 <li>
                   <a href="#" className="nav-link text-white">
-                    Tutorial
+                    How to Create Courses
                   </a>
                 </li>
               </ul>
@@ -141,14 +142,14 @@ function BaseFooter() {
               <div className="d-flex">
                 <a href="#">
                   <img
-                    src="../../assets/images/svg/appstore.svg"
+                    src={appstore}
                     alt=""
                     className="img-fluid"
                   />
                 </a>
                 <a href="#" className="ms-2">
                   <img
-                    src="../../assets/images/svg/playstore.svg"
+                    src={playstore}
                     alt=""
                     className="img-fluid"
                   />
@@ -164,7 +165,7 @@ function BaseFooter() {
               <div className="me-4">
                 <span>
                   ©<span id="copyright5"></span>
-                  Algo-Learn
+                  ITHUTE
                 </span>
               </div>
               <div>
