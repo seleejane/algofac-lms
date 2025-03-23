@@ -12,21 +12,6 @@ function CourseDetail() {
     const param = useParams();
 
     /* const addToCart = async (courseId, price, cartId, userId) => { */
-    const addToCart = async (courseId, price, cartId, userId, country) => {    
-        const formData = new FormData();
-
-        formData.append(courseId, "1");
-        formData.append(price, "278");
-        formData.append(cartId, "134567");
-        formData.append(userId, "1");
-        formData.append(country, "Botswana");
-
-        
-        
-        const req = await axios.post(`cart/cart-create/, ${formData}`);
-            console.log(req.data);
-            console.log("Added to cart");
-    }
     
    
     useEffect (()=> {
@@ -40,6 +25,26 @@ function CourseDetail() {
         }
         fetchData();    
     },[])
+
+    const addToCart = async() => {
+        const formdata = new FormData();
+        formdata.append("user_id", 1);
+        formdata.append("course_id", 1);
+        formdata.append("cart_id", "555444");
+        formdata.append("country_name", "Botswana");
+        formdata.append("price", 900);
+
+        try {
+            await axios.post(`cart/cart-create/`, formdata).then((res) => {
+                console.log(res.data);
+            })
+            
+        } catch (error) {
+            console.log(error)
+            
+        }
+        
+    }
     
     return (
         <>
@@ -174,255 +179,114 @@ function CourseDetail() {
                                                 >
                                                 {course?.curriculum?.map((c, index) => {
                                                     {/* Item */}
-                                                    <div className="accordion-item mb-3" key={index}>
+                                                    return(
+                                                    <>
+                                                    <div className="accordion-item mb-3">
                                                         <h6 className="accordion-header font-base" id="heading-1">
                                                             <button
                                                                 className="accordion-button fw-bold rounded d-sm-flex d-inline-block collapsed"
                                                                 type="button"
                                                                 data-bs-toggle="collapse"
-                                                                data-bs-target="#collapse-1"
+                                                                data-bs-target={`#collapse-${c.variant_id}`}
                                                                 aria-expanded="true"
-                                                                aria-controls="collapse-1"
+                                                                aria-controls={`collapse-${c.variant_id}`}
                                                             >
 
-                                                                {c.level}
+                                                                {c.title}
                                                                 
                                                             </button>
                                                         </h6>
+                                                        <hr />
                                                         <div
-                                                            id="collapse-1"
+                                                            id={`#collapse-${c.variant_id}`}
                                                             className="accordion-collapse collapse show"
                                                             aria-labelledby="heading-1"
                                                             data-bs-parent="#accordionExample2"
                                                         >
                                                             <div className="accordion-body mt-3">
                                                                 {/* Course lecture */}
-                                                                <div className="d-flex justify-content-between align-items-center">
-                                                                    <div className="position-relative d-flex align-items-center">
-                                                                        <a
-                                                                            href="#"
-                                                                            className="btn btn-danger-soft btn-round btn-sm mb-0 stretched-link position-static"
-                                                                        >
-                                                                            <i className="fas fa-play me-0" />
-                                                                        </a>
-                                                                        <span className="d-inline-block text-truncate ms-2 mb-0 h6 fw-light w-100px w-sm-200px w-md-400px">
-                                                                            Introduction
-                                                                        </span>
-                                                                    </div>
-                                                                    <p className="mb-0">2m 10s</p>
-                                                                </div>
-                                                                <hr /> {/* Divider */}
-
-                                                                {/* Course lecture */}
                                                                 
                                                                 {c?.variant_items?.map((l, index) => {
+                                                                return (
                                                                 <>                                                              
                                                                 <div key={index} className="d-flex justify-content-between align-items-center">
                                                                     <div className="position-relative d-flex align-items-center">
-                                                                        <a
-                                                                            href="#"
-                                                                            className="btn btn-danger-soft btn-round btn-sm mb-0 stretched-link position-static"
-                                                                        >
-                                                                            <i className="fas fa-play me-0" />
-                                                                        </a>
-                                                                        <span className="d-inline-block text-truncate ms-2 mb-0 h6 fw-light w-100px w-sm-200px w-md-400px">
+                                                                    <a href="#" className="btn btn-danger-soft btn-round btn-sm mb-0 stretched-link position-static">
+                                                                            {l.preview === true ? <i className="fas fa-play me-0" /> : <i className="fas fa-lock me-0" />}
+                                                                    </a>
+                                                                    <span className="d-inline-block text-truncate ms-2 mb-0 h6 fw-light w-100px w-sm-200px w-md-400px">
 
-                                                                            {l.title}
-                                                                        </span>
+                                                                        {l.title}
+                                                                    </span>
                                                                     </div>
                                                                     <p className="mb-0 text-truncate">{l.content_duration}</p>
-                                                                    <hr /> {/* Divider */}
+                                                                    
                                                                 </div>
+                                                                {/* Divider */}
                                                                 
                                                                 </>
-                                                                })}
+                                                                )})}
                                                                 
 
                                                             </div>
                                                         </div>
+
                                                     </div>
+                                                    
                                                     {/* Item */}
-                                                    <div className="accordion-item mb-3">
-                                                        <h6 className="accordion-header font-base" id="heading-2">
-                                                            <button
-                                                                className="accordion-button fw-bold collapsed rounded d-sm-flex d-inline-block"
-                                                                type="button"
-                                                                data-bs-toggle="collapse"
-                                                                data-bs-target="#collapse-2"
-                                                                aria-expanded="false"
-                                                                aria-controls="collapse-2"
-                                                            >
-                                                                Customer Life cycle
-                                                                <span className="small ms-0 ms-sm-2">
-                                                                    (4 Lectures)
-                                                                </span>
-                                                            </button>
-                                                        </h6>
-                                                        <div
-                                                            id="collapse-2"
-                                                            className="accordion-collapse collapse"
-                                                            aria-labelledby="heading-2"
-                                                            data-bs-parent="#accordionExample2"
-                                                        >
-                                                            {/* Accordion body START */}
-                                                            <div className="accordion-body mt-3">
-                                                                {/* Course lecture */}
-                                                                <div className="d-flex justify-content-between align-items-center">
-                                                                    <div className="position-relative d-flex align-items-center">
-                                                                        <a
-                                                                            href="#"
-                                                                            className="btn btn-danger-soft btn-round btn-sm mb-0 stretched-link position-static"
-                                                                        >
-                                                                            <i className="fas fa-play me-0" />
-                                                                        </a>
-                                                                        <span className="d-inline-block text-truncate ms-2 mb-0 h6 fw-light w-100px w-sm-200px w-md-400px">
-                                                                            What is Digital Marketing
-                                                                        </span>
-                                                                    </div>
-                                                                    <p className="mb-0">11m 20s</p>
-                                                                </div>
-                                                                <hr /> {/* Divider */}
-                                                                {/* Course lecture */}
-                                                                <div className="d-flex justify-content-between align-items-center">
-                                                                    <div className="position-relative d-flex align-items-center">
-                                                                        <a
-                                                                            href="#"
-                                                                            className="btn btn-danger-soft btn-round btn-sm mb-0 stretched-link position-static"
-                                                                        >
-                                                                            <i className="fas fa-play me-0" />
-                                                                        </a>
-                                                                        <span className="d-inline-block text-truncate ms-2 mb-0 h6 fw-light w-100px w-sm-200px w-md-400px">
-                                                                            15 Tips for Writing Magnetic Headlines
-                                                                        </span>
-                                                                    </div>
-                                                                    <p className="mb-0 text-truncate">25m 20s</p>
-                                                                </div>
-                                                                <hr /> {/* Divider */}
-                                                                {/* Course lecture */}
-                                                                <div className="d-flex justify-content-between align-items-center">
-                                                                    <div className="position-relative d-flex align-items-center">
-                                                                        <a
-                                                                            href="#"
-                                                                            className="btn btn-danger-soft btn-round btn-sm mb-0 stretched-link position-static"
-                                                                        >
-                                                                            <i className="fas fa-play me-0" />
-                                                                        </a>
-                                                                        <span className="d-inline-block text-truncate ms-2 mb-0 h6 fw-light w-100px w-sm-200px w-md-400px">
-                                                                            How to Write Like Your Customers Talk
-                                                                        </span>
-                                                                    </div>
-                                                                    <p className="mb-0">11m 30s</p>
-                                                                </div>
-                                                                <hr /> {/* Divider */}
-                                                                {/* Course lecture */}
-                                                                <div className="d-flex justify-content-between align-items-center">
-                                                                    <div className="position-relative d-flex align-items-center">
-                                                                        <div>
-                                                                            <a
-                                                                                href="#"
-                                                                                className="btn btn-danger-soft btn-round btn-sm mb-0 stretched-link position-static"
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#exampleModal"
-                                                                            >
-                                                                                <i className="fas fa-play me-0" />
-                                                                            </a>
-                                                                        </div>
-                                                                        <div className="row g-sm-0 align-items-center">
-                                                                            <div className="col-sm-6">
-                                                                                <span className="d-inline-block text-truncate ms-2 mb-0 h6 fw-light w-100px w-md-400px">
-                                                                                    How to Flip Features Into Benefits
-                                                                                </span>
-                                                                            </div>
-                                                                            <div className="col-sm-6">
-                                                                                <span className="badge text-bg-orange ms-2 ms-md-0">
-                                                                                    <i className="fas fa-lock fa-fw me-1" />
-                                                                                    Premium
-                                                                                </span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <p className="mb-0 d-inline-block text-truncate w-70px w-sm-60px">
-                                                                        35m 30s
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                            {/* Accordion body END */}
-                                                        </div>
-                                                    </div>
-                                                
-                                                    })}
+                                                    
+                                                    </>
+                                                    )})}
                                                 </div>
                                                 {/* Course accordion END */}
                                             </div>
                                             {/* Content END */}
 
                                             {/* Content START */}
-                                            <div
-                                                className="tab-pane fade"
-                                                id="course-pills-3"
-                                                role="tabpanel"
-                                                aria-labelledby="course-pills-tab-3"
-                                            >
-                                                {/* Card START */}
-                                                <div className="card mb-0 mb-md-4">
-                                                    <div className="row g-0 align-items-center">
-                                                        <div className="col-md-5">
-                                                            {/* Image */}
-                                                            <img
-                                                                src="https://geeksui.codescandy.com/geeks/assets/images/avatar/avatar-3.jpg"
-                                                                className="img-fluid rounded-3"
-                                                                alt="instructor-image"
-                                                            />
-                                                        </div>
-                                                        <div className="col-md-7">
-                                                            {/* Card body */}
-                                                            <div className="card-body">
-                                                                {/* Title */}
-                                                                <h3 className="card-title mb-0">{course?.teacher?.full_name}</h3>
-                                                                <p className="mb-2">{course?.teacher?.about}</p>
-                                                                {/* Social button */}
-                                                                <ul className="list-inline mb-3">
-                                                                    <li className="list-inline-item me-3">
-                                                                        <a href={course?.teacher?.twitter} className="fs-5 text-twitter">
-                                                                            <i className="fab fa-twitter-square" />
-                                                                        </a>
-                                                                    </li>
-                                                                    <li className="list-inline-item me-3">
-                                                                        <a href={course?.teacher?.facebook} className="fs-5 text-facebook">
-                                                                            <i className="fab fa-facebook-square" />
-                                                                        </a>
-                                                                    </li>
-                                                                    <li className="list-inline-item me-3">
-                                                                        <a href="#" className="fs-5 text-linkedin">
-                                                                            <i className="fab fa-linkedin" />
-                                                                        </a>
-                                                                    </li>
-                                                                    
-                                                                </ul>
+
+                                            <div className="tab-pane fade" id="course-pills-3" role="tabpanel" aria-labelledby="course-pills-tab-3">
+                                                        {/* Card START */}
+                                                        <div className="card mb-0 mb-md-4">
+                                                            <div className="row g-0 align-items-center">
+                                                                <div className="col-md-5">
+                                                                    {/* Image */}
+                                                                    <img src={course?.teacher?.image} className="img-fluid rounded-3" alt="instructor-image" />
+                                                                </div>
+                                                                <div className="col-md-7">
+                                                                    {/* Card body */}
+                                                                    <div className="card-body">
+                                                                        {/* Title */}
+                                                                        <h3 className="card-title mb-0">{course?.teacher?.full_name}</h3>
+                                                                        <p className="mb-2">{course?.teacher?.bio}</p>
+                                                                        {/* Social button */}
+                                                                        <ul className="list-inline mb-3">
+                                                                            <li className="list-inline-item me-3">
+                                                                                <a href={course?.teacher?.twitter} className="fs-5 text-twitter">
+                                                                                    <i className="fab fa-twitter-square" />
+                                                                                </a>
+                                                                            </li>
+                                                                            <li className="list-inline-item me-3">
+                                                                                <a href={course?.teacher?.facebook} className="fs-5 text-facebook">
+                                                                                    <i className="fab fa-facebook-square" />
+                                                                                </a>
+                                                                            </li>
+                                                                            <li className="list-inline-item me-3">
+                                                                                <a href={course?.teacher?.linkedin} className="fs-5 text-linkedin">
+                                                                                    <i className="fab fa-linkedin" />
+                                                                                </a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
+                                                        {/* Card END */}
+                                                        {/* Instructor info */}
+                                                        <h5 className="mb-3">About Instructor</h5>
+                                                        <p className="mb-3">{course?.teacher?.about}</p>
                                                     </div>
-                                                </div>
-                                                {/* Card END */}
-                                                {/* Instructor info */}
-                                                <h5 className="mb-3">About Instructor</h5>
-                                                <p className="mb-3">
-                                                    Fulfilled direction use continual set him propriety
-                                                    continued. Saw met applauded favorite deficient engrossed
-                                                    concealed and her. Concluded boy perpetual old supposing.
-                                                    Farther related bed and passage comfort civilly. Dashboard
-                                                    see frankness objection abilities. As hastened oh produced
-                                                    prospect formerly up am. Placing forming nay looking old
-                                                    married few has. Margaret disposed of add screened rendered
-                                                    six say his striking confined.
-                                                </p>
-                                                <p className="mb-3">
-                                                    As it so contrasted oh estimating instrument. Size like body
-                                                    someone had. Are conduct viewing boy minutes warrant the
-                                                    expense? Tolerably behavior may admit daughters offending
-                                                    her ask own. Praise effect wishes change way and any wanted.
-                                                </p>
-                                            </div>
+
+                                           
                                             <div
                                                 className="tab-pane fade"
                                                 id="course-pills-4"
@@ -1095,8 +959,8 @@ function CourseDetail() {
                                                     </div>
                                                 </div>
                                                 {/* Buttons */}
-                                                <div className="mt-3 d-sm-flex justify-content-sm-between " onClick={addToCart}>
-                                                    <button className="btn btn-primary mb-0 w-100 me-2">
+                                                <div className="mt-3 d-sm-flex justify-content-sm-between ">
+                                                    <button className="btn btn-primary mb-0 w-100 me-2" onClick={() => addToCart(1, 1, "700099", "Botswana", "300")}>
                                                         <i className='fas fa-shopping-cart'></i> Add To Cart
                                                     </button>
 

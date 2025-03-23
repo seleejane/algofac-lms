@@ -63,7 +63,7 @@ function Index() {
                                     className="btn btn-outline-success fs-4 text-inherit ms-3"
                                 >
 
-                                    Watch Demo <i className='fas fa-video'></i>
+                                    WELCOME REMARKS <i className='fas fa-video'></i>
                                 </a>
                             </div>
                         </div>
